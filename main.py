@@ -1,9 +1,5 @@
 import json
-from os import write
-from turtle import down
 from pytube import Channel
-from operator import indexOf
-from ast import literal_eval
 from os.path import exists
 
 version = "0.1.0"
@@ -68,14 +64,14 @@ for channel_id in archive_channels_config:
             video_data = {
                 "id": video.video_id,
                 "title": video.title,
+                "date": (video.publish_date.isoformat())[0:10],  # type: ignore
                 "description": video.description,
-                "date": video.publish_date,
             }
 
             channel_data["videos_archived"].append(video_data)
 
             # Download video
-            filename = f"{channel_data['id']} - {video.title} [{video.video_id}]"  # type: ignore
+            filename = f"{channel_data['id']} - {video_data['date']} {video.title} [youtube-{video.video_id}]"  # type: ignore
             video.streams.get_highest_resolution().download(f"channels/{channel_data['id']}/", f"{filename}.mp4")  # type: ignore
 
             exclusion_list.append(video.video_id)
